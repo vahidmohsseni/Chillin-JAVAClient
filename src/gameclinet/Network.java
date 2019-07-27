@@ -1,18 +1,17 @@
 package gameclinet;
 
-import javax.net.SocketFactory;
+
+import gameclinet.helper.network.SSLUtil;
+
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,37 +27,18 @@ class Network {
         host_ip = Config.getConfigIns().config.getJSONObject("net").getString("host");
         host_port = Config.getConfigIns().config.getJSONObject("net").getInt("port");
         socketAddress = new InetSocketAddress(host_ip, host_port);
-        socket = create_socket();
 
     }
 
-    private SSLSocket create_socket() {
-        SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-        SSLSocket sslSocket = null;
-        try {
-            sslSocket = (SSLSocket) sslSocketFactory.createSocket(host_ip, host_port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sslSocket;
+    public void connect() throws Exception{
+        SSLSocketFactory socket_factory = SSLUtil.getAllTrustedSocketFactory();
+        SSLSocket sslSocket;
+        sslSocket = (SSLSocket) socket_factory.createSocket(host_ip, host_port);
+        sslSocket.startHandshake();
+        socket = sslSocket;
 
     }
 
-
-    void connect() {
-        try {
-
-            socket.setSoTimeout(Config.getConfigIns().config.getJSONObject("net").getInt("timeout"));
-            //socket.connect(socketAddress);
-
-
-            socket.startHandshake();
-            socket.setSoTimeout(0);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public String getHost_ip(){
         return host_ip;
@@ -72,19 +52,71 @@ class Network {
     byte[] recv_data(){
 //        byte[] size;
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            char[] size = new char[4];
+            InputStream in = socket.getInputStream();
+            byte[] size_by = new byte[4];
+            in.read(size_by, 0, 4);
+            int size = ByteBuffer.wrap(size_by).order(ByteOrder.LITTLE_ENDIAN).getChar();
 
-            br.read(size, 0, 4);
+//            byte[] raw_data = new byte[size];
+            List<Byte> raw_data = new ArrayList<>();
+            while (raw_data.size() < size){
+                int a = (size - raw_data.size() > 1024) ? 1024 : size - raw_data.size();
+                byte[] tmp = new byte[a];
+                in.read(tmp, raw_data.size(), a);
 
-            System.out.println(size);
+                for(byte b : tmp){
+                    raw_data.add(b);
+                }
+            }
 
+            byte[] result = new byte[raw_data.size()];
+            for (int i = 0; i < raw_data.size(); i++){
+                result[i] = raw_data.get(i);
+            }
+            return result;
+//            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()), 4);
+//
+//            // check for empty data!
+//
+//            char[] size_ch = new char[4];
+//
+//
+//            br.read(size_ch, 0, 4);
+//            int size;
+//            size = ByteBuffer.wrap(new String(size_ch).getBytes()).order(ByteOrder.LITTLE_ENDIAN).getChar();
+//            System.out.println(size);
+//            List<Byte> raw_data = new ArrayList<>();
+//            while (raw_data.size() < size){
+//                System.out.println(size);
+//                System.out.println(raw_data.size());
+//                int a = (size - raw_data.size() > 1024) ? 1024 : size - raw_data.size();
+//
+//                br = new BufferedReader(new InputStreamReader(socket.getInputStream()), a);
+//                // check for empty data!
+//                char[] tmp = new char[a];
+//                br.read(tmp, 0, a);
+//                byte[] ttt = ByteBuffer.wrap(new String(tmp).getBytes()).order(ByteOrder.LITTLE_ENDIAN).array();
+//                for(byte c : ttt){
+//                    System.out.println("!!");
+//                    raw_data.add(c);
+//                }
+//                System.out.println(raw_data.size());
+//
+//            }
+//            System.out.println(raw_data.size());
+//            byte[] result = new byte[raw_data.size()];
+////            System.out.println(raw_data);
+//            for (int i = 0; i < raw_data.size(); i++){
+//                result[i] = raw_data.get(i);
+//            }
+////            System.out.println(result);
+//            return new String(result, StandardCharsets.ISO_8859_1).getBytes();
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new byte[]{};
     }
 
     int send_data(byte[] data){
@@ -96,7 +128,7 @@ class Network {
         try {
             OutputStream os = socket.getOutputStream();
             byte[] res = B2b(result);
-             os.write(res);
+            os.write(res);
             os.flush();
 
         } catch (IOException e) {
@@ -105,6 +137,7 @@ class Network {
         }
 
         return 1;
+
     }
 
     private static List<Byte> b2B(byte[] bytes)

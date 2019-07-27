@@ -28,7 +28,7 @@ class MessageFactory {
         register_on_messages(new EndGame());
         register_on_messages(new JoinOfflineGame());
         register_on_messages(new JoinOnlineGame());
-        // register_on_messages(new Message());
+        register_on_messages(new Message());
         register_on_messages(new RealtimeCommand());
         register_on_messages(new RealtimeSnapshot());
         register_on_messages(new StartGame());

@@ -27,5 +27,7 @@ public class GameClient {
         core.connect();
         core.join();
 
+        core.loop();
+
     }
 }

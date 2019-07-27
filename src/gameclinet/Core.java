@@ -12,7 +12,7 @@ public class Core {
 
     private boolean game_running;
     private Queue<KSObject> command_send_queue;
-    private SslClient network;
+    private Network network;
     private Protocol protocol;
     private BaseAI ai;
 
@@ -20,14 +20,8 @@ public class Core {
 
         game_running = false;
         command_send_queue = new LinkedBlockingQueue<>();
-
-//        network = new Network();
-//        protocol = new Protocol(network);
-
-        network = new SslClient();
+        network = new Network();
         protocol = new Protocol(network);
-//        sslClient.run("localhost", 5000);
-
 
     }
 
@@ -38,11 +32,13 @@ public class Core {
 
     public void quit(){
         game_running = false;
-        command_send_queue.add(null);
+        // adding null to java collections is not permitted!
+        // command_send_queue.add(null);
         network.close();
     }
 
     private void send_message(KSObject msg){
+
         protocol.send_message(msg);
     }
 
@@ -134,12 +130,25 @@ public class Core {
             if (msg.Name().equals(ClientJoined.NameStatic)){
                 break;
             }
-
-
         }
         return false;
     }
 
+    public void loop(){
+        while (true) {
+            msg_type, msg = self._recv_msg()
+
+            if isinstance(msg, BaseSnapshot):
+            self._handle_snapshot(msg)
+
+            elif msg_type ==StartGame.name():
+            self._handle_start_game(msg)
+
+            elif msg_type ==EndGame.name():
+            self._handle_end_game(msg)
+            break
+        }
+    }
 
 
 }

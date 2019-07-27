@@ -3,9 +3,11 @@ package gameclinet.helper.messages;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class StartGame extends gameclinet.helper.messages.KSObject
+public class StartGame extends KSObject
 {
     public Integer startTime;
 

@@ -3,19 +3,16 @@ package gameclinet;
 import gameclinet.helper.messages.KSObject;
 import gameclinet.helper.parser.Parser;
 
+
 class Protocol {
 
 //    private Network network;
-    private SslClient network;
+    private Network network;
     private Parser parser;
 
-//    public Protocol(Network network) {
-//        this.network = network;
-//        this.parser = new Parser(Config.getConfigIns().config.getJSONObject(
-//                "general").getJSONArray("command_files"));
-//    }
 
-    public Protocol(SslClient network){
+
+    public Protocol(Network network){
         this.network = network;
         this.parser = new Parser(Config.getConfigIns().config.getJSONObject(
                 "general").getJSONArray("command_files"));

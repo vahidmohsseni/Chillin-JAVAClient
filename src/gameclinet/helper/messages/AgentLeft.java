@@ -1,6 +1,5 @@
 package gameclinet.helper.messages;
 
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
