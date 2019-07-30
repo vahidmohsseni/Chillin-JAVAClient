@@ -26,7 +26,7 @@ public class Core {
     }
 
     public void registerAI(BaseAI ai) {
-        ai.set_command_send_queue(command_send_queue);
+        ai.setCommandSendQueue(command_send_queue);
         this.ai = ai;
     }
 
@@ -42,10 +42,10 @@ public class Core {
         protocol.send_message(msg);
     }
 
-    private KSObject recv_message(){
-        KSObject tmp = protocol.recv_message();
+    private KSObject[] recv_message(){
+        KSObject[] tmp = protocol.recv_message();
 
-        if (tmp != null){
+        if (tmp[0] != null){
             return tmp;
         }
         // log
@@ -124,29 +124,45 @@ public class Core {
         }
 
         send_message(join_msg);
-
+        KSObject msg = new ClientJoined();
+        ((ClientJoined)msg).joined = false;
         while (true){
-            KSObject msg = recv_message();
+            KSObject[] tmp = recv_message();
+            msg = tmp[0];
+
             if (msg.Name().equals(ClientJoined.NameStatic)){
                 break;
             }
         }
+        if (((ClientJoined)msg).joined){
+            msg = (ClientJoined)msg;
+            ai.mySide = ((ClientJoined) msg).sideName;
+            ai.sides = ((ClientJoined) msg).sides;
+            ai.otherSides = ai.sides.keySet();
+            ai.otherSides.remove(ai.mySide);
+            ai.otherSide = (ai.otherSides.size() == 1) ? ai.otherSides.iterator().next(): null;
+
+            System.out.println("joined the game successfully");
+            System.out.printf("Side: %s\n", ai.mySide);
+            return true;
+        }
+        System.out.println("Failed to join the game");
         return false;
     }
 
     public void loop(){
         while (true) {
-            msg_type, msg = self._recv_msg()
-
-            if isinstance(msg, BaseSnapshot):
-            self._handle_snapshot(msg)
-
-            elif msg_type ==StartGame.name():
-            self._handle_start_game(msg)
-
-            elif msg_type ==EndGame.name():
-            self._handle_end_game(msg)
-            break
+//            msg_type, msg = self._recv_msg()
+//
+//            if isinstance(msg, BaseSnapshot):
+//            self._handle_snapshot(msg)
+//
+//            elif msg_type ==StartGame.name():
+//            self._handle_start_game(msg)
+//
+//            elif msg_type ==EndGame.name():
+//            self._handle_end_game(msg)
+//            break
         }
     }
 

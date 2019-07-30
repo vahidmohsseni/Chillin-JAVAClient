@@ -9,12 +9,13 @@ import java.util.Map;
 class MessageFactory {
 
     private Map<String, KSObject> installed_messages;
-//    private Map<String, KSObject> installed_commands;
+    private Map<String, KSObject> installed_commands;
 
     public MessageFactory(JSONArray ks_command_files) {
         installed_messages = new HashMap<>();
-//        installed_commands = new HashMap<>();
+        installed_commands = new HashMap<>();
         load_messages();
+        load_commands();
 
 
     }
@@ -36,14 +37,35 @@ class MessageFactory {
         register_on_messages(new TurnbasedSnapshot());
     }
 
+    private void load_commands(){
+        try {
+
+            Object newObject = Class.forName("ks.Commands").newInstance();
+//            System.out.println(newObject.getClass());
+            System.out.println("TODO: loading commands!");
+        }
+        catch (Exception e){
+            System.out.println("ERROR IN LOADING ks ");
+            System.out.println(e.toString());
+        }
+    }
+
     private void register_on_messages(KSObject ks){
         installed_messages.put(ks.Name(), ks);
+
+    }
+
+    private void register_on_commands(KSObject ks){
+        installed_commands.put(ks.Name(), ks);
 
     }
 
 
     public KSObject get_message(String message_name){
         return installed_messages.get(message_name);
+    }
 
+    public KSObject get_command(String command_name){
+        return installed_commands.get(command_name);
     }
 }

@@ -1,4 +1,5 @@
 import gameclinet.GameClient;
+import gameclinet.helper.messages.KSObject;
 import ks.Models;
 
 import java.io.IOException;
@@ -20,8 +21,8 @@ public class Main {
         }
 
 
-        Models.World world = new Models.World();
-        Ai ai = new Ai(world);
+        KSObject world = new Models.World();
+        AI ai = new AI(world);
 
 
 

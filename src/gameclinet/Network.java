@@ -10,8 +10,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,44 +72,6 @@ class Network {
                 result[i] = raw_data.get(i);
             }
             return result;
-//            BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()), 4);
-//
-//            // check for empty data!
-//
-//            char[] size_ch = new char[4];
-//
-//
-//            br.read(size_ch, 0, 4);
-//            int size;
-//            size = ByteBuffer.wrap(new String(size_ch).getBytes()).order(ByteOrder.LITTLE_ENDIAN).getChar();
-//            System.out.println(size);
-//            List<Byte> raw_data = new ArrayList<>();
-//            while (raw_data.size() < size){
-//                System.out.println(size);
-//                System.out.println(raw_data.size());
-//                int a = (size - raw_data.size() > 1024) ? 1024 : size - raw_data.size();
-//
-//                br = new BufferedReader(new InputStreamReader(socket.getInputStream()), a);
-//                // check for empty data!
-//                char[] tmp = new char[a];
-//                br.read(tmp, 0, a);
-//                byte[] ttt = ByteBuffer.wrap(new String(tmp).getBytes()).order(ByteOrder.LITTLE_ENDIAN).array();
-//                for(byte c : ttt){
-//                    System.out.println("!!");
-//                    raw_data.add(c);
-//                }
-//                System.out.println(raw_data.size());
-//
-//            }
-//            System.out.println(raw_data.size());
-//            byte[] result = new byte[raw_data.size()];
-////            System.out.println(raw_data);
-//            for (int i = 0; i < raw_data.size(); i++){
-//                result[i] = raw_data.get(i);
-//            }
-////            System.out.println(result);
-//            return new String(result, StandardCharsets.ISO_8859_1).getBytes();
-
 
         } catch (IOException e) {
             e.printStackTrace();

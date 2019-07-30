@@ -23,12 +23,12 @@ class Protocol {
         network.send_data(data);
     }
 
-    public KSObject recv_message() {
+    public KSObject[] recv_message() {
         byte[] data = network.recv_data();
         if (data == null){
             return null;
         }
-        KSObject msg = parser.decode(data);
+        KSObject[] msg = parser.decode(data);
 
         return msg;
     }
