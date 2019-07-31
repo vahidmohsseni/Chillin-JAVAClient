@@ -12,33 +12,33 @@ class MessageFactory {
     private Map<String, KSObject> installed_messages;
     private Map<String, KSObject> installed_commands;
 
-    public MessageFactory(JSONArray ks_command_files) {
+    MessageFactory(JSONArray ks_command_files) {
         installed_messages = new HashMap<>();
         installed_commands = new HashMap<>();
-        load_messages();
-        load_commands();
+        loadMessages();
+        loadCommands();
 
 
     }
 
-    private void load_messages(){
-        register_on_messages(new AgentJoined());
-        register_on_messages(new AgentLeft());
-        register_on_messages(new BaseCommand());
-        register_on_messages(new BaseSnapshot());
-        register_on_messages(new ClientJoined());
-        register_on_messages(new EndGame());
-        register_on_messages(new JoinOfflineGame());
-        register_on_messages(new JoinOnlineGame());
-        register_on_messages(new Message());
-        register_on_messages(new RealtimeCommand());
-        register_on_messages(new RealtimeSnapshot());
-        register_on_messages(new StartGame());
-        register_on_messages(new TurnbasedCommand());
-        register_on_messages(new TurnbasedSnapshot());
+    private void loadMessages(){
+        registerOnMessages(new AgentJoined());
+        registerOnMessages(new AgentLeft());
+        registerOnMessages(new BaseCommand());
+        registerOnMessages(new BaseSnapshot());
+        registerOnMessages(new ClientJoined());
+        registerOnMessages(new EndGame());
+        registerOnMessages(new JoinOfflineGame());
+        registerOnMessages(new JoinOnlineGame());
+        registerOnMessages(new Message());
+        registerOnMessages(new RealtimeCommand());
+        registerOnMessages(new RealtimeSnapshot());
+        registerOnMessages(new StartGame());
+        registerOnMessages(new TurnbasedCommand());
+        registerOnMessages(new TurnbasedSnapshot());
     }
 
-    private void load_commands(){
+    private void loadCommands(){
         try {
 
             Object newObject = Class.forName("ks.Commands").newInstance();
@@ -51,22 +51,23 @@ class MessageFactory {
         }
     }
 
-    private void register_on_messages(KSObject ks){
+    private void registerOnMessages(KSObject ks){
         installed_messages.put(ks.Name(), ks);
 
     }
 
-    private void register_on_commands(KSObject ks){
+    private void registerOnCommands(KSObject ks){
         installed_commands.put(ks.Name(), ks);
 
     }
 
 
-    public KSObject get_message(String message_name){
+    KSObject getMessage(String message_name){
         return installed_messages.get(message_name);
     }
 
-    public KSObject get_command(String command_name){
+    public KSObject getCommand(String command_name){
         return installed_commands.get(command_name);
+
     }
 }

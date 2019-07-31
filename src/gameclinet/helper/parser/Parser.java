@@ -34,10 +34,10 @@ public class Parser {
         Message msg = new Message();
         msg.deserialize(data);
 
-        result_msg = messageFactory.get_message(msg.type);
+        result_msg = messageFactory.getMessage(msg.type);
         result_msg.deserialize(msg.payload.getBytes());
         KSObject result_cmd = null;
-        if (BaseCommand.class.isInstance(result_msg)){
+        if (result_msg instanceof BaseCommand){
 //            result_cmd = messageFactory.get_message();
         }
 

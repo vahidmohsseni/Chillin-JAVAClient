@@ -1,14 +1,26 @@
 package gameclinet;
 
-import gameclinet.helper.messages.ClientJoined;
-import gameclinet.helper.messages.JoinOfflineGame;
-import gameclinet.helper.messages.JoinOnlineGame;
+import gameclinet.helper.messages.*;
 import ks.KSObject;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Core {
+
+class AIDecideThread implements Runnable{
+    private BaseAI ai;
+
+    AIDecideThread(BaseAI ai){
+
+        this.ai = ai;
+    }
+    public void run(){
+        ai.decide();
+    }
+
+}
+
+public class Core implements Runnable{
 
     private boolean game_running;
     private Queue<KSObject> command_send_queue;
@@ -66,6 +78,10 @@ public class Core {
             }
         }
 
+    }
+
+    public void run(){
+        sendCommandThread();
     }
 
     public boolean connect() {
@@ -135,7 +151,6 @@ public class Core {
             }
         }
         if (((ClientJoined)msg).joined){
-            msg = (ClientJoined)msg;
             ai.mySide = ((ClientJoined) msg).sideName;
             ai.sides = ((ClientJoined) msg).sides;
             ai.otherSides = ai.sides.keySet();
@@ -152,19 +167,63 @@ public class Core {
 
     public void loop(){
         while (true) {
-//            msg_type, msg = self._recv_msg()
-//
-//            if isinstance(msg, BaseSnapshot):
-//            self._handle_snapshot(msg)
-//
-//            elif msg_type ==StartGame.name():
-//            self._handle_start_game(msg)
-//
-//            elif msg_type ==EndGame.name():
-//            self._handle_end_game(msg)
-//            break
+            KSObject[] tmp = recvMessage();
+            KSObject msg = tmp[0];
+
+            if (msg instanceof BaseSnapshot){
+                handleSnapshot((BaseSnapshot) msg);
+            }
+            else if(msg.Name().equals(StartGame.NameStatic)){
+                handStartGame(msg);
+            }
+
+            else if(msg.Name().equals(EndGame.NameStatic)){
+                handleEndGame((EndGame) msg);
+                break;
+            }
         }
     }
 
+    private void handleSnapshot(BaseSnapshot snapshot){
+        ai.update(snapshot);
+        if (!game_running){
+            game_running = true;
+            ai.initialize();
+            if (!Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") ||
+                    ai.allowedToDecide()){
+                // start new thread for ai.decide()
+                Thread t1 = new Thread(new AIDecideThread(ai));
+                t1.start();
+            }
+
+        }
+        else if(Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") &&
+                ai.allowedToDecide()) {
+            // start new thread for ai.decide()
+            Thread t1 = new Thread(new AIDecideThread(ai));
+            t1.start();
+        }
+    }
+
+    private void handStartGame(KSObject gamestart){
+        // start game thread for sendCommandThread()
+        Thread t1 = new Thread(this);
+        t1.start();
+    }
+
+    private void handleEndGame(EndGame endgame){
+        String winner = (endgame.winnerSidename != null) ? endgame.winnerSidename : "draw";
+        System.out.printf("Winner side: %s\n", winner);
+        if (!endgame.details.isEmpty()){
+            System.out.println("Details:");
+            for(String name: endgame.details.keySet()){
+                System.out.printf("  %s:\n", name);
+                for(String side: endgame.details.get(name).keySet()){
+                    System.out.printf("    %s -> %s",side, endgame.details.get(name).get(side));
+                }
+            }
+        }
+        quit();
+    }
 
 }

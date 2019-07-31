@@ -29,7 +29,6 @@ public class Config {
 
 
     public void initialize(String cfg_path) throws IOException {
-
         String file_text = new String(Files.readAllBytes(Paths.get(cfg_path)));
         config = parser(file_text);
 
