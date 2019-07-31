@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+import ks.KSObject;
+
+
 public class BaseSnapshot extends KSObject
 {
     public String worldPayload;

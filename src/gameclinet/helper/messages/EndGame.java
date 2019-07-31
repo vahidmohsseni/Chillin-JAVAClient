@@ -6,6 +6,10 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.*;
 
+
+import ks.KSObject;
+
+
 public class EndGame extends KSObject
 {
     public String winnerSidename;

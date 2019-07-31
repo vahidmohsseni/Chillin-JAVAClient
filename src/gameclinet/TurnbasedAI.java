@@ -1,7 +1,8 @@
 package gameclinet;
 
-import gameclinet.helper.messages.KSObject;
 import gameclinet.helper.messages.TurnbasedSnapshot;
+import ks.KSObject;
+
 
 import java.util.ArrayList;
 import java.util.List;

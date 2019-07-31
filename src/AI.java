@@ -1,5 +1,6 @@
 import gameclinet.TurnbasedAI;
-import gameclinet.helper.messages.KSObject;
+import ks.KSObject;
+
 
 
 public class AI extends TurnbasedAI {

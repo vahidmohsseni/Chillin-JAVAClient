@@ -1,6 +1,7 @@
 package gameclinet.helper.parser;
 
 import gameclinet.helper.messages.*;
+import ks.KSObject;
 import org.json.JSONArray;
 
 import java.util.HashMap;

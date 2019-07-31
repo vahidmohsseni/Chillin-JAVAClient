@@ -4,7 +4,6 @@ import java.lang.*;
 import java.util.*;
 import java.nio.*;
 
-import gameclinet.helper.messages.KSObject;
 
 public class Commands
 {

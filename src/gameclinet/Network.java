@@ -17,37 +17,37 @@ class Network {
 
     private SocketAddress socketAddress;
     private SSLSocket socket;
-    private int host_port;
-    private String host_ip;
+    private int hostPort;
+    private String hostIp;
 
 
     Network() {
-        host_ip = Config.getConfigIns().config.getJSONObject("net").getString("host");
-        host_port = Config.getConfigIns().config.getJSONObject("net").getInt("port");
-        socketAddress = new InetSocketAddress(host_ip, host_port);
+        hostIp = Config.getConfigIns().config.getJSONObject("net").getString("host");
+        hostPort = Config.getConfigIns().config.getJSONObject("net").getInt("port");
+        socketAddress = new InetSocketAddress(hostIp, hostPort);
 
     }
 
     public void connect() throws Exception{
         SSLSocketFactory socket_factory = SSLUtil.getAllTrustedSocketFactory();
         SSLSocket sslSocket;
-        sslSocket = (SSLSocket) socket_factory.createSocket(host_ip, host_port);
+        sslSocket = (SSLSocket) socket_factory.createSocket(hostIp, hostPort);
         sslSocket.startHandshake();
         socket = sslSocket;
 
     }
 
 
-    public String getHost_ip(){
-        return host_ip;
+    public String getHostIp(){
+        return hostIp;
     }
 
-    public int getHost_port(){
-        return host_port;
+    public int getHostPort(){
+        return hostPort;
     }
 
 
-    byte[] recv_data(){
+    byte[] recvData(){
 //        byte[] size;
         try {
             InputStream in = socket.getInputStream();
@@ -79,7 +79,7 @@ class Network {
         return new byte[]{};
     }
 
-    int send_data(byte[] data){
+    int sendData(byte[] data){
         int size = data.length;
         List<Byte> result = new ArrayList<>();
         result.addAll(b22B(ByteBuffer.allocate(Integer.BYTES).order(ByteOrder.LITTLE_ENDIAN).putInt(size).array(),

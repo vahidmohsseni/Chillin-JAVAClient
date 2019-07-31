@@ -1,5 +1,5 @@
 import gameclinet.GameClient;
-import gameclinet.helper.messages.KSObject;
+import ks.KSObject;
 import ks.Models;
 
 import java.io.IOException;

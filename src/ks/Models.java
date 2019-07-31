@@ -1,7 +1,5 @@
 package ks;
 
-import gameclinet.helper.messages.KSObject;
-
 import java.lang.*;
 import java.util.*;
 

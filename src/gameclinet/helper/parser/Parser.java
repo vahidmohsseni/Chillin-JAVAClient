@@ -1,7 +1,7 @@
 package gameclinet.helper.parser;
 
 import gameclinet.helper.messages.BaseCommand;
-import gameclinet.helper.messages.KSObject;
+import ks.KSObject;
 import gameclinet.helper.messages.Message;
 
 import org.json.JSONArray;

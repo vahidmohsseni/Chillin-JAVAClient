@@ -3,7 +3,7 @@ package gameclinet;
 import gameclinet.helper.messages.ClientJoined;
 import gameclinet.helper.messages.JoinOfflineGame;
 import gameclinet.helper.messages.JoinOnlineGame;
-import gameclinet.helper.messages.KSObject;
+import ks.KSObject;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -37,13 +37,13 @@ public class Core {
         network.close();
     }
 
-    private void send_message(KSObject msg){
+    private void sendMessage(KSObject msg){
 
-        protocol.send_message(msg);
+        protocol.sendMessage(msg);
     }
 
-    private KSObject[] recv_message(){
-        KSObject[] tmp = protocol.recv_message();
+    private KSObject[] recvMessage(){
+        KSObject[] tmp = protocol.recvMessage();
 
         if (tmp[0] != null){
             return tmp;
@@ -55,14 +55,14 @@ public class Core {
         return null;
     }
 
-    public void send_command_thread() {
+    public void sendCommandThread() {
         while (true) {
             KSObject msg = command_send_queue.poll();
             if (msg == null) {
                 break;
             }
             if (game_running) {
-                send_message(msg);
+                sendMessage(msg);
             }
         }
 
@@ -76,7 +76,7 @@ public class Core {
 
         while (true) {
             // log connecting to host ...
-            System.out.println("Connecting to host '" + network.getHost_ip() + "' port " + network.getHost_port());
+            System.out.println("Connecting to host '" + network.getHostIp() + "' port " + network.getHostPort());
             try {
                 network.connect();
                 // log connected!
@@ -123,11 +123,11 @@ public class Core {
                     Config.getConfigIns().config.getJSONObject("ai").getString("agent_name");
         }
 
-        send_message(join_msg);
+        sendMessage(join_msg);
         KSObject msg = new ClientJoined();
         ((ClientJoined)msg).joined = false;
         while (true){
-            KSObject[] tmp = recv_message();
+            KSObject[] tmp = recvMessage();
             msg = tmp[0];
 
             if (msg.Name().equals(ClientJoined.NameStatic)){

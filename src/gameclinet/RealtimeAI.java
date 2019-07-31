@@ -1,6 +1,8 @@
 package gameclinet;
 
 import gameclinet.helper.messages.*;
+import ks.KSObject;
+
 
 public class RealtimeAI extends BaseAI {
 

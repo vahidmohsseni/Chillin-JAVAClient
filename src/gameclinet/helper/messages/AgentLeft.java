@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ks.KSObject;
+
+
 public class AgentLeft extends KSObject
 {
     public String sideName;

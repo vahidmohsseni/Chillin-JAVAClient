@@ -6,6 +6,9 @@ import java.util.*;
 import java.nio.*;
 import java.nio.charset.Charset;
 
+import ks.KSObject;
+
+
 public class Message extends KSObject {
     public String type;
     public String payload;

@@ -5,6 +5,10 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.*;
 
+
+import ks.KSObject;
+
+
 public class ClientJoined extends KSObject
 {
     public Boolean joined;

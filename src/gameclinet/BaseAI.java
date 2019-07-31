@@ -2,8 +2,9 @@ package gameclinet;
 
 import gameclinet.helper.messages.BaseCommand;
 import gameclinet.helper.messages.BaseSnapshot;
-import gameclinet.helper.messages.KSObject;
 import gameclinet.helper.parser.Parser;
+
+import ks.KSObject;
 
 
 import java.util.*;

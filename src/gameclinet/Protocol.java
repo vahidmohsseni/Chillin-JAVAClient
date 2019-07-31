@@ -1,6 +1,6 @@
 package gameclinet;
 
-import gameclinet.helper.messages.KSObject;
+import ks.KSObject;
 import gameclinet.helper.parser.Parser;
 
 
@@ -18,13 +18,13 @@ class Protocol {
                 "general").getJSONArray("command_files"));
     }
 
-    public void send_message(KSObject msg) {
+    public void sendMessage(KSObject msg) {
         byte[] data = parser.encode(msg);
-        network.send_data(data);
+        network.sendData(data);
     }
 
-    public KSObject[] recv_message() {
-        byte[] data = network.recv_data();
+    public KSObject[] recvMessage() {
+        byte[] data = network.recvData();
         if (data == null){
             return null;
         }
