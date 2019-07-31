@@ -1,5 +1,7 @@
 package ks;
 
+import gameclinet.helper.messages.BaseCommand;
+
 import java.lang.*;
 import java.util.*;
 import java.nio.*;
@@ -7,7 +9,7 @@ import java.nio.*;
 
 public class Commands
 {
-	public static class Place extends KSObject
+	public static class Place extends BaseCommand
 	{
 		public Integer x;
 		public Integer y;

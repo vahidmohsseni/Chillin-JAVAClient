@@ -9,7 +9,7 @@ import ks.KSObject;
 
 import java.util.*;
 
-public abstract class BaseAI {
+public class BaseAI {
 
     BaseAI(KSObject in_world){
         world = in_world;

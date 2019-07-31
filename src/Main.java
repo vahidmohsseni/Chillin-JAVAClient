@@ -22,7 +22,7 @@ public class Main {
 
 
         KSObject world = new Models.World();
-        AI ai = new AI(world);
+        AI ai = new AI((Models.World) world);
 
 
 

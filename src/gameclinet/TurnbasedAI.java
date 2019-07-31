@@ -16,8 +16,8 @@ public class TurnbasedAI extends RealtimeAI {
     }
 
 
-    public void update(TurnbasedSnapshot snapshot){
-        super.update(snapshot);
+    public void updateTurnbased(TurnbasedSnapshot snapshot){
+        super.updateRealtime(snapshot);
         this.turnAllowedSides = snapshot.turnAllowedSides;
 
     }

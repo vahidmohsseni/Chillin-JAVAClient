@@ -14,7 +14,7 @@ public class RealtimeAI extends BaseAI {
         duration = null;
     }
 
-    public void update(RealtimeSnapshot snapshot) {
+    public void updateRealtime(RealtimeSnapshot snapshot) {
         super.update(snapshot);
         this.currentCycle = snapshot.currentCycle;
         this.duration = snapshot.cycleDuration;

@@ -185,7 +185,18 @@ public class Core implements Runnable{
     }
 
     private void handleSnapshot(BaseSnapshot snapshot){
-        ai.update(snapshot);
+
+        if(snapshot instanceof TurnbasedSnapshot){
+            ((TurnbasedAI)ai).updateTurnbased((TurnbasedSnapshot) snapshot);
+        }
+        else if( snapshot instanceof RealtimeSnapshot) {
+            ((RealtimeAI) ai).updateRealtime((RealtimeSnapshot) snapshot);
+        }
+        else{
+            ai.update(snapshot);
+        }
+
+        // ai.update(snapshot);
         if (!game_running){
             game_running = true;
             ai.initialize();

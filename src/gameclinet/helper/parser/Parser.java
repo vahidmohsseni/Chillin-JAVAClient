@@ -1,6 +1,7 @@
 package gameclinet.helper.parser;
 
 import gameclinet.helper.messages.BaseCommand;
+import gameclinet.helper.messages.TurnbasedSnapshot;
 import ks.KSObject;
 import gameclinet.helper.messages.Message;
 
@@ -36,7 +37,9 @@ public class Parser {
 
         result_msg = messageFactory.getMessage(msg.type);
         result_msg.deserialize(msg.payload.getBytes());
+
         KSObject result_cmd = null;
+
         if (result_msg instanceof BaseCommand){
 //            result_cmd = messageFactory.get_message();
         }
