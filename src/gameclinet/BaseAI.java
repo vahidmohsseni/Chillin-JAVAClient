@@ -29,7 +29,7 @@ public class BaseAI {
 
 
     public void update(BaseSnapshot snapshot){
-        this.world.deserialize(Parser.getBytes(snapshot.worldPayload));
+        this.world.deserialize(Parser.getBytes(snapshot.getWorldPayload()));
     }
 
     public boolean allowedToDecide(){
@@ -37,20 +37,20 @@ public class BaseAI {
     }
 
 
-    protected void _sendCommand(BaseCommand command, BaseCommand msg){
-        msg.type = command.Name();
-        msg.payload = Parser.getString(command.serialize());
+    protected void _sendCommand(KSObject command, BaseCommand msg){
+        msg.setType(command.Name());
+        msg.setPayload(Parser.getString(command.serialize()));
         commandSendQueue.add(msg);
     }
 
-    protected void _sendCommand(BaseCommand command){
+    protected void _sendCommand(KSObject command){
         BaseCommand msg = new BaseCommand();
-        msg.type = command.Name();
-        msg.payload = Parser.getString(command.serialize());
+        msg.setType(command.Name());
+        msg.setPayload(Parser.getString(command.serialize()));
         commandSendQueue.add(msg);
     }
 
-    public void sendCommand(BaseCommand command){
+    public void sendCommand(KSObject command){
         if (allowedToDecide()){
             _sendCommand(command);
         }

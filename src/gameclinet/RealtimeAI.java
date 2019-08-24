@@ -16,24 +16,24 @@ public class RealtimeAI extends BaseAI {
 
     public void updateRealtime(RealtimeSnapshot snapshot) {
         super.update(snapshot);
-        this.currentCycle = snapshot.currentCycle;
-        this.duration = snapshot.cycleDuration;
+        this.currentCycle = snapshot.getCurrentCycle();
+        this.duration = snapshot.getCycleDuration();
     }
 
 
-    protected void _sendCommand(BaseCommand command, RealtimeCommand msg) {
-        msg.cycle = this.currentCycle;
+    protected void _sendCommand(KSObject command, RealtimeCommand msg) {
+        msg.setCycle(this.currentCycle);
         super._sendCommand(command, msg);
     }
 
-    public void _sendCommand(BaseCommand command){
+    public void _sendCommand(KSObject command){
         RealtimeCommand msg = new RealtimeCommand();
-        msg.cycle = this.currentCycle;
+        msg.setCycle(this.currentCycle);
         super._sendCommand(command, msg);
     }
 
 
-    public void sendCommand(BaseCommand command){
+    public void sendCommand(KSObject command){
         if (allowedToDecide()){
             _sendCommand(command);
         }

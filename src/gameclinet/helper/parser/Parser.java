@@ -18,8 +18,8 @@ public class Parser {
 
     public byte[] encode(KSObject payload_obj){
         Message msg = new Message();
-        msg.type = payload_obj.Name();
-        msg.payload = new String(payload_obj.serialize(), StandardCharsets.ISO_8859_1);
+        msg.setType(payload_obj.Name());
+        msg.setPayload(new String(payload_obj.serialize(), StandardCharsets.ISO_8859_1));
 
 
         return msg.serialize();
@@ -31,8 +31,8 @@ public class Parser {
         Message msg = new Message();
         msg.deserialize(data);
 
-        result_msg = messageFactory.getMessage(msg.type);
-        result_msg.deserialize(msg.payload.getBytes(StandardCharsets.ISO_8859_1));
+        result_msg = messageFactory.getMessage(msg.getType());
+        result_msg.deserialize(msg.getPayload().getBytes(StandardCharsets.ISO_8859_1));
 
 
         return result_msg;

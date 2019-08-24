@@ -1,6 +1,6 @@
 import gameclinet.GameClient;
 import ks.KSObject;
-import ks.Models;
+import ks.models.*;
 
 import java.io.IOException;
 
@@ -21,8 +21,8 @@ public class Main {
         }
 
 
-        KSObject world = new Models.World();
-        AI ai = new AI((Models.World) world);
+        KSObject world = new World();
+        AI ai = new AI((World) world);
 
 
 

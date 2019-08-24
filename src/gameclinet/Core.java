@@ -133,22 +133,18 @@ public class Core implements Runnable{
         KSObject join_msg;
         if (Config.getConfigIns().config.getJSONObject("general").getBoolean("offline_mode")){
             join_msg = new JoinOfflineGame();
-            ((JoinOfflineGame) join_msg).teamNickname =
-                    Config.getConfigIns().config.getJSONObject("ai").getString("team_nickname");
-            ((JoinOfflineGame) join_msg).agentName =
-                    Config.getConfigIns().config.getJSONObject("ai").getString("agent_name");
+            ((JoinOfflineGame) join_msg).setTeamNickname(Config.getConfigIns().config.getJSONObject("ai").getString("team_nickname"));
+            ((JoinOfflineGame) join_msg).setAgentName(Config.getConfigIns().config.getJSONObject("ai").getString("agent_name"));
         }
         else {
             join_msg = new JoinOnlineGame();
-            ((JoinOnlineGame) join_msg).token =
-                    Config.getConfigIns().config.getJSONObject("ai").getString("token");
-            ((JoinOnlineGame) join_msg).agentName =
-                    Config.getConfigIns().config.getJSONObject("ai").getString("agent_name");
+            ((JoinOnlineGame) join_msg).setToken(Config.getConfigIns().config.getJSONObject("ai").getString("token"));
+            ((JoinOnlineGame) join_msg).setAgentName(Config.getConfigIns().config.getJSONObject("ai").getString("agent_name"));
         }
 
         sendMessage(join_msg);
         KSObject msg = new ClientJoined();
-        ((ClientJoined)msg).joined = false;
+        ((ClientJoined) msg).setJoined(false);
         while (true){
             KSObject tmp = recvMessage();
             msg = tmp;
@@ -157,9 +153,9 @@ public class Core implements Runnable{
                 break;
             }
         }
-        if (((ClientJoined)msg).joined){
-            ai.mySide = ((ClientJoined) msg).sideName;
-            ai.sides = ((ClientJoined) msg).sides;
+        if (((ClientJoined) msg).getJoined()){
+            ai.mySide = ((ClientJoined) msg).getSideName();
+            ai.sides = ((ClientJoined) msg).getSides();
             ai.otherSides = ai.sides.keySet();
             ai.otherSides.remove(ai.mySide);
             ai.otherSide = (ai.otherSides.size() == 1) ? ai.otherSides.iterator().next(): null;
@@ -229,14 +225,14 @@ public class Core implements Runnable{
     }
 
     private void handleEndGame(EndGame endgame){
-        String winner = (endgame.winnerSidename != null) ? endgame.winnerSidename : "draw";
+        String winner = (endgame.getWinnerSidename() != null) ? endgame.getWinnerSidename() : "draw";
         System.out.printf("Winner side: %s\n", winner);
-        if (!endgame.details.isEmpty()){
+        if (!endgame.getDetails().isEmpty()){
             System.out.println("Details:");
-            for(String name: endgame.details.keySet()){
+            for(String name: endgame.getDetails().keySet()){
                 System.out.printf("  %s:\n", name);
-                for(String side: endgame.details.get(name).keySet()){
-                    System.out.printf("    %s -> %s",side, endgame.details.get(name).get(side));
+                for(String side: endgame.getDetails().get(name).keySet()){
+                    System.out.printf("    %s -> %s",side, endgame.getDetails().get(name).get(side));
                 }
             }
         }

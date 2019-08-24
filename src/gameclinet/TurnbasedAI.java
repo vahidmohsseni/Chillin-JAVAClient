@@ -20,7 +20,7 @@ public class TurnbasedAI extends RealtimeAI {
 
     public void updateTurnbased(TurnbasedSnapshot snapshot){
         super.updateRealtime(snapshot);
-        this.turnAllowedSides = snapshot.turnAllowedSides;
+        this.turnAllowedSides = snapshot.getTurnAllowedSides();
 
     }
 
@@ -30,17 +30,17 @@ public class TurnbasedAI extends RealtimeAI {
         return this.turnAllowedSides.contains(this.mySide);
     }
 
-    public void _sendCommand(BaseCommand command, TurnbasedCommand msg){
+    public void _sendCommand(KSObject command, TurnbasedCommand msg){
         super._sendCommand(command, msg);
     }
 
-    public void _sendCommand(BaseCommand command){
+    public void _sendCommand(KSObject command){
         TurnbasedCommand msg = new TurnbasedCommand();
         super._sendCommand(command, msg);
     }
 
 
-    public void sendCommand(BaseCommand command){
+    public void sendCommand(KSObject command){
         if (allowedToDecide()){
             _sendCommand(command);
         }
