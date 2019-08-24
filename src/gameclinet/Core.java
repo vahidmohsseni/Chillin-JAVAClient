@@ -7,19 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-class AIDecideThread implements Runnable{
-    private BaseAI ai;
-
-    AIDecideThread(BaseAI ai){
-
-        this.ai = ai;
-    }
-    public void run(){
-        ai.decide();
-    }
-
-}
-
 public class Core implements Runnable{
 
     private boolean game_running;
@@ -205,16 +192,18 @@ public class Core implements Runnable{
             if (!Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") ||
                     ai.allowedToDecide()){
                 // start new thread for ai.decide()
-                Thread t1 = new Thread(new AIDecideThread(ai));
-                t1.start();
+                Runnable t1 = () -> ai.decide();
+                new Thread(t1).start();
+
             }
 
         }
         else if(Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") &&
                 ai.allowedToDecide()) {
             // start new thread for ai.decide()
-            Thread t1 = new Thread(new AIDecideThread(ai));
-            t1.start();
+            Runnable t1 = () -> ai.decide();
+            new Thread(t1).start();
+
         }
     }
 
