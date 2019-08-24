@@ -14,8 +14,7 @@ class Protocol {
 
     public Protocol(Network network){
         this.network = network;
-        this.parser = new Parser(Config.getConfigIns().config.getJSONObject(
-                "general").getJSONArray("command_files"));
+        this.parser = new Parser();
     }
 
     public void sendMessage(KSObject msg) {
@@ -23,12 +22,12 @@ class Protocol {
         network.sendData(data);
     }
 
-    public KSObject[] recvMessage() {
+    public KSObject recvMessage() {
         byte[] data = network.recvData();
         if (data == null){
             return null;
         }
-        KSObject[] msg = parser.decode(data);
+        KSObject msg = parser.decode(data);
 
         return msg;
     }

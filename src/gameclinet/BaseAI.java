@@ -37,22 +37,22 @@ public class BaseAI {
     }
 
 
-    protected void _sendCommands(BaseCommand command, BaseCommand msg){
-        msg.type = command.type;
-        msg.payload =Parser.getString(command.serialize());
+    protected void _sendCommand(BaseCommand command, BaseCommand msg){
+        msg.type = command.Name();
+        msg.payload = Parser.getString(command.serialize());
         commandSendQueue.add(msg);
     }
 
-    protected void _sendCommands(BaseCommand command){
+    protected void _sendCommand(BaseCommand command){
         BaseCommand msg = new BaseCommand();
-        msg.type = command.type;
-        msg.payload =Parser.getString(command.serialize());
+        msg.type = command.Name();
+        msg.payload = Parser.getString(command.serialize());
         commandSendQueue.add(msg);
     }
 
     public void sendCommand(BaseCommand command){
         if (allowedToDecide()){
-            _sendCommands(command);
+            _sendCommand(command);
         }
     }
 

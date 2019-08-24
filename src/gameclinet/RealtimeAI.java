@@ -20,10 +20,23 @@ public class RealtimeAI extends BaseAI {
         this.duration = snapshot.cycleDuration;
     }
 
+
+    protected void _sendCommand(BaseCommand command, RealtimeCommand msg) {
+        msg.cycle = this.currentCycle;
+        super._sendCommand(command, msg);
+    }
+
     public void _sendCommand(BaseCommand command){
         RealtimeCommand msg = new RealtimeCommand();
         msg.cycle = this.currentCycle;
-        super._sendCommands(command, msg);
+        super._sendCommand(command, msg);
+    }
+
+
+    public void sendCommand(BaseCommand command){
+        if (allowedToDecide()){
+            _sendCommand(command);
+        }
     }
 
 

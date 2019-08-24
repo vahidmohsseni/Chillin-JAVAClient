@@ -23,13 +23,14 @@ class AIDecideThread implements Runnable{
 public class Core implements Runnable{
 
     private boolean game_running;
+    private boolean game_ended;
     private Queue<KSObject> command_send_queue;
     private Network network;
     private Protocol protocol;
     private BaseAI ai;
 
     public Core(){
-
+        game_ended = false;
         game_running = false;
         command_send_queue = new LinkedBlockingQueue<>();
         network = new Network();
@@ -44,9 +45,11 @@ public class Core implements Runnable{
 
     public void quit(){
         game_running = false;
+        game_ended = true;
         // adding null to java collections is not permitted!
         // command_send_queue.add(null);
         network.close();
+        System.exit(0);
     }
 
     private void sendMessage(KSObject msg){
@@ -54,10 +57,10 @@ public class Core implements Runnable{
         protocol.sendMessage(msg);
     }
 
-    private KSObject[] recvMessage(){
-        KSObject[] tmp = protocol.recvMessage();
+    private KSObject recvMessage(){
+        KSObject tmp = protocol.recvMessage();
 
-        if (tmp[0] != null){
+        if (tmp != null){
             return tmp;
         }
         // log
@@ -70,7 +73,11 @@ public class Core implements Runnable{
     public void sendCommandThread() {
         while (true) {
             KSObject msg = command_send_queue.poll();
+
             if (msg == null) {
+                continue;
+            }
+            if (game_ended){
                 break;
             }
             if (game_running) {
@@ -143,8 +150,8 @@ public class Core implements Runnable{
         KSObject msg = new ClientJoined();
         ((ClientJoined)msg).joined = false;
         while (true){
-            KSObject[] tmp = recvMessage();
-            msg = tmp[0];
+            KSObject tmp = recvMessage();
+            msg = tmp;
 
             if (msg.Name().equals(ClientJoined.NameStatic)){
                 break;
@@ -167,14 +174,13 @@ public class Core implements Runnable{
 
     public void loop(){
         while (true) {
-            KSObject[] tmp = recvMessage();
-            KSObject msg = tmp[0];
+            KSObject msg = recvMessage();
 
             if (msg instanceof BaseSnapshot){
                 handleSnapshot((BaseSnapshot) msg);
             }
             else if(msg.Name().equals(StartGame.NameStatic)){
-                handStartGame(msg);
+                handleStartGame(msg);
             }
 
             else if(msg.Name().equals(EndGame.NameStatic)){
@@ -216,7 +222,7 @@ public class Core implements Runnable{
         }
     }
 
-    private void handStartGame(KSObject gamestart){
+    private void handleStartGame(KSObject gamestart){
         // start game thread for sendCommandThread()
         Thread t1 = new Thread(this);
         t1.start();

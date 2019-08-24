@@ -1,5 +1,7 @@
 package gameclinet;
 
+import gameclinet.helper.messages.BaseCommand;
+import gameclinet.helper.messages.TurnbasedCommand;
 import gameclinet.helper.messages.TurnbasedSnapshot;
 import ks.KSObject;
 
@@ -26,5 +28,21 @@ public class TurnbasedAI extends RealtimeAI {
     @Override
     public boolean allowedToDecide() {
         return this.turnAllowedSides.contains(this.mySide);
+    }
+
+    public void _sendCommand(BaseCommand command, TurnbasedCommand msg){
+        super._sendCommand(command, msg);
+    }
+
+    public void _sendCommand(BaseCommand command){
+        TurnbasedCommand msg = new TurnbasedCommand();
+        super._sendCommand(command, msg);
+    }
+
+
+    public void sendCommand(BaseCommand command){
+        if (allowedToDecide()){
+            _sendCommand(command);
+        }
     }
 }
