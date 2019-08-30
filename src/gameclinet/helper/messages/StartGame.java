@@ -31,10 +31,10 @@ public class StartGame extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "StartGame";
+	public static final String nameStatic = "StartGame";
 	
 	@Override
-	public String Name() { return "StartGame"; }
+	public String name() { return "StartGame"; }
 	
 	@Override
 	public byte[] serialize()

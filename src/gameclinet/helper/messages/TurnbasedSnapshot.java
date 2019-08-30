@@ -31,10 +31,10 @@ public class TurnbasedSnapshot extends RealtimeSnapshot
 	{
 	}
 	
-	public static final String NameStatic = "TurnbasedSnapshot";
+	public static final String nameStatic = "TurnbasedSnapshot";
 	
 	@Override
-	public String Name() { return "TurnbasedSnapshot"; }
+	public String name() { return "TurnbasedSnapshot"; }
 	
 	@Override
 	public byte[] serialize()

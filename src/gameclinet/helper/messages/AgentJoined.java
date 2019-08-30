@@ -53,10 +53,10 @@ public class AgentJoined extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "AgentJoined";
+	public static final String nameStatic = "AgentJoined";
 	
 	@Override
-	public String Name() { return "AgentJoined"; }
+	public String name() { return "AgentJoined"; }
 	
 	@Override
 	public byte[] serialize()

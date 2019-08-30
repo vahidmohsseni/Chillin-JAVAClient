@@ -42,10 +42,10 @@ public class EndGame extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "EndGame";
+	public static final String nameStatic = "EndGame";
 	
 	@Override
-	public String Name() { return "EndGame"; }
+	public String name() { return "EndGame"; }
 	
 	@Override
 	public byte[] serialize()

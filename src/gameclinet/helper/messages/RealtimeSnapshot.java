@@ -42,10 +42,10 @@ public class RealtimeSnapshot extends BaseSnapshot
 	{
 	}
 	
-	public static final String NameStatic = "RealtimeSnapshot";
+	public static final String nameStatic = "RealtimeSnapshot";
 	
 	@Override
-	public String Name() { return "RealtimeSnapshot"; }
+	public String name() { return "RealtimeSnapshot"; }
 	
 	@Override
 	public byte[] serialize()

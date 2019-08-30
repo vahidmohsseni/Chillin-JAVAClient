@@ -31,10 +31,10 @@ public class BaseSnapshot extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "BaseSnapshot";
+	public static final String nameStatic = "BaseSnapshot";
 	
 	@Override
-	public String Name() { return "BaseSnapshot"; }
+	public String name() { return "BaseSnapshot"; }
 	
 	@Override
 	public byte[] serialize()

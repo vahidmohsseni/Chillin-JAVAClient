@@ -31,10 +31,10 @@ public class World extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "World";
+	public static final String nameStatic = "World";
 	
 	@Override
-	public String Name() { return "World"; }
+	public String name() { return "World"; }
 	
 	@Override
 	public byte[] serialize()

@@ -42,10 +42,10 @@ public class Place extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "Place";
+	public static final String nameStatic = "Place";
 	
 	@Override
-	public String Name() { return "Place"; }
+	public String name() { return "Place"; }
 	
 	@Override
 	public byte[] serialize()

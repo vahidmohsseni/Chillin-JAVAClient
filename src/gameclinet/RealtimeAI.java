@@ -4,40 +4,38 @@ import gameclinet.helper.messages.*;
 import ks.KSObject;
 
 
-public class RealtimeAI extends BaseAI {
+public class RealtimeAI<T extends KSObject> extends BaseAI<T> {
 
-    public Integer currentCycle;
-    public Float duration;
-    public RealtimeAI(KSObject in_world) {
-        super(in_world);
-        currentCycle = 0;
-        duration = null;
+	protected Integer currentCycle;
+	protected Float cycleDuration;
+
+
+    public RealtimeAI(T world) {
+        super(world);
     }
 
-    public void updateRealtime(RealtimeSnapshot snapshot) {
+    @Override
+    public void update(BaseSnapshot snapshot) {
         super.update(snapshot);
-        this.currentCycle = snapshot.getCurrentCycle();
-        this.duration = snapshot.getCycleDuration();
+        RealtimeSnapshot x = (RealtimeSnapshot) snapshot;
+        this.currentCycle = x.getCurrentCycle();
+        this.cycleDuration = x.getCycleDuration();
     }
 
-
-    protected void _sendCommand(KSObject command, RealtimeCommand msg) {
-        msg.setCycle(this.currentCycle);
-        super._sendCommand(command, msg);
+    @Override
+    public boolean allowedToDecide() {
+        return true;
     }
 
-    public void _sendCommand(KSObject command){
-        RealtimeCommand msg = new RealtimeCommand();
-        msg.setCycle(this.currentCycle);
-        super._sendCommand(command, msg);
+    @Override
+    protected void _sendCommand(KSObject command, BaseCommand msg) {
+    	RealtimeCommand  message;
+    	if (msg == null)
+            message = new RealtimeCommand();
+        else
+            message = (RealtimeCommand) msg;
+
+        message.setCycle(this.currentCycle);
+        super._sendCommand(command, message);
     }
-
-
-    public void sendCommand(KSObject command){
-        if (allowedToDecide()){
-            _sendCommand(command);
-        }
-    }
-
-
 }

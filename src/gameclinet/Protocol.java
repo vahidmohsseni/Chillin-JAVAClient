@@ -6,13 +6,11 @@ import gameclinet.helper.parser.Parser;
 
 class Protocol {
 
-//    private Network network;
     private Network network;
     private Parser parser;
 
 
-
-    public Protocol(Network network){
+    public Protocol(Network network) {
         this.network = network;
         this.parser = new Parser();
     }
@@ -24,11 +22,10 @@ class Protocol {
 
     public KSObject recvMessage() {
         byte[] data = network.recvData();
-        if (data == null){
+        if (data == null)
             return null;
-        }
-        KSObject msg = parser.decode(data);
 
+        KSObject msg = parser.decode(data);
         return msg;
     }
 }

@@ -29,7 +29,7 @@ import java.util.Map.Entry;
 
 public class JSONObject {
     private final Map<String, Object> map;
-    public static final Object NULL = new JSONObject.Null();
+    public static final Object NULL = new Null();
 
     public JSONObject() {
         this.map = new HashMap();

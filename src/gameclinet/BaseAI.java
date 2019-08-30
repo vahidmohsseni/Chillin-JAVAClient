@@ -8,59 +8,47 @@ import ks.KSObject;
 
 
 import java.util.*;
+import ks.KSObject;
 
-public class BaseAI {
 
-    BaseAI(KSObject in_world){
-        world = in_world;
-        otherSides = new LinkedHashSet<>();
+public class BaseAI<T extends KSObject> extends AbstractAI {
 
-    }
-    private Queue<KSObject> commandSendQueue = null;
-    public KSObject world;
-    public Map<String, List<String>> sides;
-    public String mySide;
-    public String otherSide;
-    public Set<String> otherSides;
+	protected T world;
 
-    public void setCommandSendQueue(Queue q){
-        commandSendQueue = q;
+
+    BaseAI(T world) {
+        this.world = world;
     }
 
-
-    public void update(BaseSnapshot snapshot){
+    @Override
+    public void update(BaseSnapshot snapshot) {
         this.world.deserialize(Parser.getBytes(snapshot.getWorldPayload()));
     }
 
-    public boolean allowedToDecide(){
+    @Override
+    public boolean allowedToDecide() {
         return true;
     }
 
 
-    protected void _sendCommand(KSObject command, BaseCommand msg){
-        msg.setType(command.Name());
-        msg.setPayload(Parser.getString(command.serialize()));
-        commandSendQueue.add(msg);
+    protected void _sendCommand(KSObject command, BaseCommand msg) {
+    	BaseCommand message;
+    	if (msg == null)
+            message = new BaseCommand();
+        else
+            message = (BaseCommand) msg;
+
+        message.setType(command.name());
+        message.setPayload(Parser.getString(command.serialize()));
+        commandSendQueue.add(message);
     }
 
-    protected void _sendCommand(KSObject command){
-        BaseCommand msg = new BaseCommand();
-        msg.setType(command.Name());
-        msg.setPayload(Parser.getString(command.serialize()));
-        commandSendQueue.add(msg);
+    protected void _sendCommand(KSObject command) {
+        _sendCommand(command, null);
     }
 
-    public void sendCommand(KSObject command){
-        if (allowedToDecide()){
+    public void sendCommand(KSObject command) {
+        if (allowedToDecide())
             _sendCommand(command);
-        }
-    }
-
-    public void initialize(){
-
-    }
-
-    public void decide(){
-
     }
 }

@@ -42,10 +42,10 @@ public class AgentLeft extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "AgentLeft";
+	public static final String nameStatic = "AgentLeft";
 	
 	@Override
-	public String Name() { return "AgentLeft"; }
+	public String name() { return "AgentLeft"; }
 	
 	@Override
 	public byte[] serialize()

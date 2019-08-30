@@ -3,21 +3,30 @@ package gameclinet.helper.parser;
 import gameclinet.helper.messages.*;
 import ks.KSObject;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+
 class MessageFactory {
+
+	private static MessageFactory instance = null;
 
     private Map<String, KSObject> installedMessages;
 
-    MessageFactory() {
-        installedMessages = new HashMap<>();
+
+    private MessageFactory() {
+    	installedMessages = new HashMap<>();
         loadMessages();
-
-
     }
 
-    private void loadMessages(){
+    static MessageFactory getInstance() {
+    	if (instance == null)
+    		instance = new MessageFactory();
+    	return instance;
+    }
+
+    private void loadMessages() {
         registerOnMessages(new AgentJoined());
         registerOnMessages(new AgentLeft());
         registerOnMessages(new BaseCommand());
@@ -34,22 +43,17 @@ class MessageFactory {
         registerOnMessages(new TurnbasedSnapshot());
     }
 
-
-    private void registerOnMessages(KSObject ks){
-        installedMessages.put(ks.Name(), ks);
-
+    private void registerOnMessages(KSObject obj) {
+    	installedMessages.put(obj.name(), obj);
     }
 
-
-
-    KSObject getMessage(String message_name){
-        try {
-            return installedMessages.get(message_name).getClass().getDeclaredConstructor().newInstance();
-        }
-        catch (Exception e){
-            System.out.println("Error in creating new instance in getMessage MessageFactory!");
-            return installedMessages.get(message_name);
-        }
+    KSObject getMessage(String messageName) {
+    	try {
+			return installedMessages.get(messageName).getClass().getDeclaredConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		}
+		return null;
     }
-
 }

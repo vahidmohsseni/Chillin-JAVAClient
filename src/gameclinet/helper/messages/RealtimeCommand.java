@@ -31,10 +31,10 @@ public class RealtimeCommand extends BaseCommand
 	{
 	}
 	
-	public static final String NameStatic = "RealtimeCommand";
+	public static final String nameStatic = "RealtimeCommand";
 	
 	@Override
-	public String Name() { return "RealtimeCommand"; }
+	public String name() { return "RealtimeCommand"; }
 	
 	@Override
 	public byte[] serialize()

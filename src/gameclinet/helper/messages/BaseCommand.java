@@ -42,10 +42,10 @@ public class BaseCommand extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "BaseCommand";
+	public static final String nameStatic = "BaseCommand";
 	
 	@Override
-	public String Name() { return "BaseCommand"; }
+	public String name() { return "BaseCommand"; }
 	
 	@Override
 	public byte[] serialize()

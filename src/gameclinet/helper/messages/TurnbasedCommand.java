@@ -20,10 +20,10 @@ public class TurnbasedCommand extends RealtimeCommand
 	{
 	}
 	
-	public static final String NameStatic = "TurnbasedCommand";
+	public static final String nameStatic = "TurnbasedCommand";
 	
 	@Override
-	public String Name() { return "TurnbasedCommand"; }
+	public String name() { return "TurnbasedCommand"; }
 	
 	@Override
 	public byte[] serialize()

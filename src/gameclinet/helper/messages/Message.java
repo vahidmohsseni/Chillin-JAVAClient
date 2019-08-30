@@ -42,10 +42,10 @@ public class Message extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "Message";
+	public static final String nameStatic = "Message";
 	
 	@Override
-	public String Name() { return "Message"; }
+	public String name() { return "Message"; }
 	
 	@Override
 	public byte[] serialize()

@@ -42,10 +42,10 @@ public class JoinOfflineGame extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "JoinOfflineGame";
+	public static final String nameStatic = "JoinOfflineGame";
 	
 	@Override
-	public String Name() { return "JoinOfflineGame"; }
+	public String name() { return "JoinOfflineGame"; }
 	
 	@Override
 	public byte[] serialize()

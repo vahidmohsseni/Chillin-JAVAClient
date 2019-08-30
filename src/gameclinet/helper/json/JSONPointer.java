@@ -12,8 +12,8 @@ public class JSONPointer {
     private static final String ENCODING = "utf-8";
     private final List<String> refTokens;
 
-    public static JSONPointer.Builder builder() {
-        return new JSONPointer.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public JSONPointer(String pointer) {
@@ -155,7 +155,7 @@ public class JSONPointer {
             return new JSONPointer(this.refTokens);
         }
 
-        public JSONPointer.Builder append(String token) {
+        public Builder append(String token) {
             if (token == null) {
                 throw new NullPointerException("token cannot be null");
             } else {
@@ -164,7 +164,7 @@ public class JSONPointer {
             }
         }
 
-        public JSONPointer.Builder append(int arrayIndex) {
+        public Builder append(int arrayIndex) {
             this.refTokens.add(String.valueOf(arrayIndex));
             return this;
         }

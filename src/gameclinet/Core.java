@@ -1,5 +1,6 @@
 package gameclinet;
 
+import gameclinet.helper.logger.Logger;
 import gameclinet.helper.messages.*;
 import ks.KSObject;
 
@@ -10,49 +11,42 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Core {
 
     private boolean gameRunning;
-
     private Queue<KSObject> commandSendQueue;
     private Network network;
     private Protocol protocol;
-    private BaseAI ai;
+    private AbstractAI ai;
 
-    public Core(){
 
+    public Core() {
         gameRunning = false;
         commandSendQueue = new LinkedBlockingQueue<>();
         network = new Network();
         protocol = new Protocol(network);
-
     }
 
-    public void registerAI(BaseAI ai) {
+    public void registerAI(AbstractAI ai) {
         ai.setCommandSendQueue(commandSendQueue);
         this.ai = ai;
     }
 
-    public void quit(){
+    public void quit() {
         gameRunning = false;
-
-        // adding null to java collections is not permitted!
         commandSendQueue.add(new KSNull());
         network.close();
-
     }
 
-    private void sendMessage(KSObject msg){
-
+    private void sendMessage(KSObject msg) {
         protocol.sendMessage(msg);
     }
 
-    private KSObject recvMessage(){
+    private KSObject recvMessage() {
         KSObject tmp = protocol.recvMessage();
 
-        if (tmp != null){
+        if (tmp != null)
             return tmp;
-        }
+
         // log
         quit();
-
         return null;
     }
 
@@ -63,43 +57,41 @@ public class Core {
             if (msg == null) {
                 continue;
             }
-            else if(msg instanceof KSNull){
-                return;
+            if (msg instanceof KSNull) {
+                break;
             }
-
             if (gameRunning) {
                 sendMessage(msg);
             }
         }
-
     }
 
-    public boolean connect() {
 
-        int max_tries = Config.getConfigIns().config.getJSONObject("net").getInt("max_tries");
+    public boolean connect() {
+        int max_tries = Config.getInstance().config.getJSONObject("net").getInt("max_tries");
         int retry_waiting_time =
-                Config.getConfigIns().config.getJSONObject("net").getInt("retry_waiting_time");
+                Config.getInstance().config.getJSONObject("net").getInt("retry_waiting_time");
 
         while (true) {
             // log connecting to host ...
-            System.out.println("Connecting to host '" + network.getHostIp() + "' port " + network.getHostPort());
+            Logger.log("Connecting to host '" + network.getHostIp() + "' port " + network.getHostPort());
             try {
                 network.connect();
                 // log connected!
-                System.out.println("Connected successfully");
+                Logger.log("Connected successfully");
                 return true;
             }
             catch (Exception e) {
                 // log
-                System.out.println("Failed to connect: " + e);
+            	Logger.log("Failed to connect: " + e);
             }
 
             max_tries--;
-            if (max_tries < 0){
+            if (max_tries < 1) {
                 break;
             }
             // log try reconnecting
-            System.out.println("Reconnecting in " + retry_waiting_time + " seconds ...");
+            Logger.log("Reconnecting in " + retry_waiting_time + " seconds ...");
 
             try {
                 Thread.sleep(retry_waiting_time * 1000);
@@ -112,117 +104,97 @@ public class Core {
     }
 
 
-    public boolean join(){
-        KSObject join_msg;
-        if (Config.getConfigIns().config.getJSONObject("general").getBoolean("offline_mode")){
-            join_msg = new JoinOfflineGame();
-            ((JoinOfflineGame) join_msg).setTeamNickname(Config.getConfigIns().config.getJSONObject("ai").getString("team_nickname"));
-            ((JoinOfflineGame) join_msg).setAgentName(Config.getConfigIns().config.getJSONObject("ai").getString("agent_name"));
+    public boolean join() {
+        KSObject joinMsg;
+        if (Config.getInstance().config.getJSONObject("general").getBoolean("offline_mode")) {
+        	joinMsg = new JoinOfflineGame();
+            ((JoinOfflineGame) joinMsg).setTeamNickname(Config.getInstance().config.getJSONObject("ai").getString("team_nickname"));
+            ((JoinOfflineGame) joinMsg).setAgentName(Config.getInstance().config.getJSONObject("ai").getString("agent_name"));
         }
         else {
-            join_msg = new JoinOnlineGame();
-            ((JoinOnlineGame) join_msg).setToken(Config.getConfigIns().config.getJSONObject("ai").getString("token"));
-            ((JoinOnlineGame) join_msg).setAgentName(Config.getConfigIns().config.getJSONObject("ai").getString("agent_name"));
+        	joinMsg = new JoinOnlineGame();
+            ((JoinOnlineGame) joinMsg).setToken(Config.getInstance().config.getJSONObject("ai").getString("token"));
+            ((JoinOnlineGame) joinMsg).setAgentName(Config.getInstance().config.getJSONObject("ai").getString("agent_name"));
         }
 
-        sendMessage(join_msg);
-        KSObject msg = new ClientJoined();
-        ((ClientJoined) msg).setJoined(false);
+        sendMessage(joinMsg);
+        ClientJoined msg = new ClientJoined();
+        msg.setJoined(false);
         while (true){
             KSObject tmp = recvMessage();
-            msg = tmp;
-
-            if (msg.Name().equals(ClientJoined.NameStatic)){
+            if (tmp.name().equals(ClientJoined.nameStatic))
+            	msg = (ClientJoined) tmp;
                 break;
-            }
         }
-        if (((ClientJoined) msg).getJoined()){
-            ai.mySide = ((ClientJoined) msg).getSideName();
-            ai.sides = ((ClientJoined) msg).getSides();
-            ai.otherSides = ai.sides.keySet();
-            ai.otherSides.remove(ai.mySide);
-            ai.otherSide = (ai.otherSides.size() == 1) ? ai.otherSides.iterator().next(): null;
 
-            System.out.println("joined the game successfully");
-            System.out.printf("Side: %s\n", ai.mySide);
+        if (msg.getJoined()) {
+        	ai.setSides(msg.getSides(), msg.getSideName());
+            Logger.log("joined the game successfully");
+            Logger.log("Side: " + ai.mySide + "\n");
             return true;
         }
-        System.out.println("Failed to join the game");
+
+        Logger.log("Failed to join the game");
         return false;
     }
 
-    public void loop(){
+    public void loop() {
         while (true) {
             KSObject msg = recvMessage();
 
-            if (msg instanceof BaseSnapshot){
+            if (msg instanceof BaseSnapshot) {
                 handleSnapshot((BaseSnapshot) msg);
             }
-            else if(msg.Name().equals(StartGame.NameStatic)){
+            else if (msg.name().equals(StartGame.nameStatic)) {
                 handleStartGame(msg);
             }
-
-            else if(msg.Name().equals(EndGame.NameStatic)){
+            else if (msg.name().equals(EndGame.nameStatic)) {
                 handleEndGame((EndGame) msg);
-                return;
+                break;
             }
         }
     }
 
-    private void handleSnapshot(BaseSnapshot snapshot){
-
-        if(snapshot instanceof TurnbasedSnapshot){
-            ((TurnbasedAI)ai).updateTurnbased((TurnbasedSnapshot) snapshot);
-        }
-        else if( snapshot instanceof RealtimeSnapshot) {
-            ((RealtimeAI) ai).updateRealtime((RealtimeSnapshot) snapshot);
-        }
-        else{
-            ai.update(snapshot);
-        }
+    private void handleSnapshot(BaseSnapshot snapshot) {
+        ai.update(snapshot);
 
         // ai.update(snapshot);
-        if (!gameRunning){
+        if (!gameRunning) {
             gameRunning = true;
             ai.initialize();
-            if (!Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") ||
-                    ai.allowedToDecide()){
+            if (!Config.getInstance().config.getJSONObject("ai").getBoolean("create_new_thread") ||
+                    ai.allowedToDecide()) {
                 // start new thread for ai.decide()
-                Runnable t1 = () -> ai.decide();
-                new Thread(t1).start();
-
+                Runnable t = () -> ai.decide();
+                new Thread(t).start();
             }
-
         }
-        else if(Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") &&
+        else if(Config.getInstance().config.getJSONObject("ai").getBoolean("create_new_thread") &&
                 ai.allowedToDecide()) {
             // start new thread for ai.decide()
-            Runnable t1 = () -> ai.decide();
-            new Thread(t1).start();
-
+            Runnable t = () -> ai.decide();
+            new Thread(t).start();
         }
     }
 
-    private void handleStartGame(KSObject gamestart){
+    private void handleStartGame(KSObject gamestart) {
         // start game thread for sendCommandThread()
-        Runnable t1 = () -> this.sendCommandThread();
-        new Thread(t1).start();
-
+        Runnable t = () -> this.sendCommandThread();
+        new Thread(t).start();
     }
 
-    private void handleEndGame(EndGame endgame){
+    private void handleEndGame(EndGame endgame) {
         String winner = (endgame.getWinnerSidename() != null) ? endgame.getWinnerSidename() : "draw";
-        System.out.printf("Winner side: %s\n", winner);
-        if (!endgame.getDetails().isEmpty()){
-            System.out.println("Details:");
-            for(String name: endgame.getDetails().keySet()){
-                System.out.printf("  %s:\n", name);
-                for(String side: endgame.getDetails().get(name).keySet()){
-                    System.out.printf("    %s -> %s\n",side, endgame.getDetails().get(name).get(side));
+        Logger.log("Winner side: " + winner + "\n");
+        if (!endgame.getDetails().isEmpty()) {
+        	Logger.log("Details:");
+            for(String name: endgame.getDetails().keySet()) {
+            	Logger.log("  " + name + ":\n");
+                for(String side: endgame.getDetails().get(name).keySet()) {
+                	Logger.log("    " + side + " -> " + endgame.getDetails().get(name).get(side));
                 }
             }
         }
         quit();
     }
-
 }

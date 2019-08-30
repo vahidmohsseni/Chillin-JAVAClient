@@ -53,10 +53,10 @@ public class ClientJoined extends KSObject
 	{
 	}
 	
-	public static final String NameStatic = "ClientJoined";
+	public static final String nameStatic = "ClientJoined";
 	
 	@Override
-	public String Name() { return "ClientJoined"; }
+	public String name() { return "ClientJoined"; }
 	
 	@Override
 	public byte[] serialize()
