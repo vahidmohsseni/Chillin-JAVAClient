@@ -7,36 +7,36 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-public class Core implements Runnable{
+public class Core {
 
-    private boolean game_running;
-    private boolean game_ended;
-    private Queue<KSObject> command_send_queue;
+    private boolean gameRunning;
+
+    private Queue<KSObject> commandSendQueue;
     private Network network;
     private Protocol protocol;
     private BaseAI ai;
 
     public Core(){
-        game_ended = false;
-        game_running = false;
-        command_send_queue = new LinkedBlockingQueue<>();
+
+        gameRunning = false;
+        commandSendQueue = new LinkedBlockingQueue<>();
         network = new Network();
         protocol = new Protocol(network);
 
     }
 
     public void registerAI(BaseAI ai) {
-        ai.setCommandSendQueue(command_send_queue);
+        ai.setCommandSendQueue(commandSendQueue);
         this.ai = ai;
     }
 
     public void quit(){
-        game_running = false;
-        game_ended = true;
+        gameRunning = false;
+
         // adding null to java collections is not permitted!
-        // command_send_queue.add(null);
+        commandSendQueue.add(new KSNull());
         network.close();
-        System.exit(0);
+
     }
 
     private void sendMessage(KSObject msg){
@@ -52,30 +52,26 @@ public class Core implements Runnable{
         }
         // log
         quit();
-        System.exit(0);
 
         return null;
     }
 
     public void sendCommandThread() {
         while (true) {
-            KSObject msg = command_send_queue.poll();
+            KSObject msg = commandSendQueue.poll();
 
             if (msg == null) {
                 continue;
             }
-            if (game_ended){
-                break;
+            else if(msg instanceof KSNull){
+                return;
             }
-            if (game_running) {
+
+            if (gameRunning) {
                 sendMessage(msg);
             }
         }
 
-    }
-
-    public void run(){
-        sendCommandThread();
     }
 
     public boolean connect() {
@@ -168,7 +164,7 @@ public class Core implements Runnable{
 
             else if(msg.Name().equals(EndGame.NameStatic)){
                 handleEndGame((EndGame) msg);
-                break;
+                return;
             }
         }
     }
@@ -186,8 +182,8 @@ public class Core implements Runnable{
         }
 
         // ai.update(snapshot);
-        if (!game_running){
-            game_running = true;
+        if (!gameRunning){
+            gameRunning = true;
             ai.initialize();
             if (!Config.getConfigIns().config.getJSONObject("ai").getBoolean("create_new_thread") ||
                     ai.allowedToDecide()){
@@ -209,8 +205,9 @@ public class Core implements Runnable{
 
     private void handleStartGame(KSObject gamestart){
         // start game thread for sendCommandThread()
-        Thread t1 = new Thread(this);
-        t1.start();
+        Runnable t1 = () -> this.sendCommandThread();
+        new Thread(t1).start();
+
     }
 
     private void handleEndGame(EndGame endgame){

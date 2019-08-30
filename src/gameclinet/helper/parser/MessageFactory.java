@@ -8,10 +8,10 @@ import java.util.Map;
 
 class MessageFactory {
 
-    private Map<String, KSObject> installed_messages;
+    private Map<String, KSObject> installedMessages;
 
     MessageFactory() {
-        installed_messages = new HashMap<>();
+        installedMessages = new HashMap<>();
         loadMessages();
 
 
@@ -36,7 +36,7 @@ class MessageFactory {
 
 
     private void registerOnMessages(KSObject ks){
-        installed_messages.put(ks.Name(), ks);
+        installedMessages.put(ks.Name(), ks);
 
     }
 
@@ -44,11 +44,11 @@ class MessageFactory {
 
     KSObject getMessage(String message_name){
         try {
-            return installed_messages.get(message_name).getClass().getDeclaredConstructor().newInstance();
+            return installedMessages.get(message_name).getClass().getDeclaredConstructor().newInstance();
         }
         catch (Exception e){
             System.out.println("Error in creating new instance in getMessage MessageFactory!");
-            return installed_messages.get(message_name);
+            return installedMessages.get(message_name);
         }
     }
 

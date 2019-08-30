@@ -24,9 +24,12 @@ public class GameClient {
     }
 
     public void run() {
-        core.connect();
-        core.join();
-
+        if (!core.connect()){
+            return;
+        }
+        if (!core.join()){
+            return;
+        }
         core.loop();
 
     }

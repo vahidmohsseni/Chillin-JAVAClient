@@ -29,6 +29,8 @@ public class Main {
         GameClient app = new GameClient(configPath);
         app.registerAI(ai);
         app.run();
+        System.out.println(Thread.currentThread().getName());
+        System.out.println(Thread.getAllStackTraces().keySet());
 
     }
 }

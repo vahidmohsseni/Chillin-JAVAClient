@@ -11,17 +11,17 @@ import java.util.Map;
 public class Config {
 
     public JSONObject config;
-    public Map<String, Object> inline_config;
+    public Map<String, Object> inlineConfig;
 
-    private static Config config_ins = null;
+    private static Config configIns = null;
     private Config() {
     }
 
     public static Config getConfigIns() {
-        if (config_ins == null){
-            config_ins = new Config();
+        if (configIns == null){
+            configIns = new Config();
         }
-        return config_ins;
+        return configIns;
 
     }
 
@@ -33,9 +33,9 @@ public class Config {
     }
 
 
-    private JSONObject parser(String file_text) {
+    private JSONObject parser(String fileText) {
 
-        return new JSONObject(file_text);
+        return new JSONObject(fileText);
 
     }
 
