@@ -44,7 +44,7 @@ class MessageFactory {
 
     KSObject getMessage(String message_name){
         try {
-            return installed_messages.get(message_name).getClass().newInstance();
+            return installed_messages.get(message_name).getClass().getDeclaredConstructor().newInstance();
         }
         catch (Exception e){
             System.out.println("Error in creating new instance in getMessage MessageFactory!");

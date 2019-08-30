@@ -221,7 +221,7 @@ public class Core implements Runnable{
             for(String name: endgame.getDetails().keySet()){
                 System.out.printf("  %s:\n", name);
                 for(String side: endgame.getDetails().get(name).keySet()){
-                    System.out.printf("    %s -> %s",side, endgame.getDetails().get(name).get(side));
+                    System.out.printf("    %s -> %s\n",side, endgame.getDetails().get(name).get(side));
                 }
             }
         }
