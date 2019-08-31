@@ -13,7 +13,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-            if (args.length > 0) {
+        if (args.length > 0) {
             configPath += args[0];
         }
         else {
