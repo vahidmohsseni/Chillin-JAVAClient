@@ -17,6 +17,30 @@ public class Core {
     private AbstractAI ai;
 
 
+    public class KSNull extends KSObject {
+
+        public KSNull (){
+
+        }
+
+        @Override
+        public String name() {
+            return null;
+        }
+
+        @Override
+        public byte[] serialize() {
+            return new byte[0];
+        }
+
+        @Override
+        protected int deserialize(byte[] s, int offset) {
+            return 0;
+        }
+    }
+
+
+
     public Core() {
         gameRunning = false;
         commandSendQueue = new LinkedBlockingQueue<>();
@@ -69,7 +93,7 @@ public class Core {
 
     public boolean connect() {
         int max_tries = Config.getInstance().config.getJSONObject("net").getInt("max_tries");
-        int retry_waiting_time =
+        int retryWaitingTime =
                 Config.getInstance().config.getJSONObject("net").getInt("retry_waiting_time");
 
         while (true) {
@@ -91,10 +115,10 @@ public class Core {
                 break;
             }
             // log try reconnecting
-            Logger.log("Reconnecting in " + retry_waiting_time + " seconds ...");
+            Logger.log("Reconnecting in " + retryWaitingTime + " seconds ...");
 
             try {
-                Thread.sleep(retry_waiting_time * 1000);
+                Thread.sleep(retryWaitingTime * 1000);
             } catch (InterruptedException ignored) {
 
             }
