@@ -49,9 +49,9 @@ public class Network {
 
 			List<Byte> rawData = new ArrayList<>();
 			while (rawData.size() < size) {
-				int a = (size - rawData.size() > 1024) ? 1024 : size - rawData.size();
-				byte[] tmp = new byte[a];
-				in.read(tmp, 0, a);
+				int chunkSize = (size - rawData.size() > 1024) ? 1024 : size - rawData.size();
+				byte[] tmp = new byte[chunkSize];
+				in.read(tmp, 0, chunkSize);
 
 				for (byte b : tmp) {
 					rawData.add(b);
