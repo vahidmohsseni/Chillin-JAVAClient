@@ -1,4 +1,4 @@
-import gameclinet.GameClient;
+import team.koala.chillin.client.GameClient;
 import ai.AI;
 import ks.KSObject;
 import ks.models.*;

@@ -1,6 +1,6 @@
 package ai;
 
-import gameclinet.TurnbasedAI;
+import team.koala.chillin.client.TurnbasedAI;
 import ks.models.*;
 import ks.commands.*;
 
