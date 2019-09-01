@@ -1,9 +1,7 @@
 package team.koala.chillin.client.helper.parser;
 
-import gameclinet.helper.messages.*;
-import gameclinet.koala.helper.messages.*;
-import ks.KSObject;
 import team.koala.chillin.client.helper.messages.*;
+import ks.KSObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
