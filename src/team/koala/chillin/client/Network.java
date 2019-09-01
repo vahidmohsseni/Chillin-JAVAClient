@@ -43,24 +43,24 @@ public class Network {
 	public byte[] recvData() {
 		try {
 			InputStream in = socket.getInputStream();
-			byte[] size_by = new byte[4];
-			in.read(size_by, 0, 4);
-			int size = ByteBuffer.wrap(size_by).order(ByteOrder.LITTLE_ENDIAN).getChar();
+			byte[] sizeByte = new byte[4];
+			in.read(sizeByte, 0, 4);
+			int size = ByteBuffer.wrap(sizeByte).order(ByteOrder.LITTLE_ENDIAN).getChar();
 
-			List<Byte> raw_data = new ArrayList<>();
-			while (raw_data.size() < size) {
-				int a = (size - raw_data.size() > 1024) ? 1024 : size - raw_data.size();
+			List<Byte> rawData = new ArrayList<>();
+			while (rawData.size() < size) {
+				int a = (size - rawData.size() > 1024) ? 1024 : size - rawData.size();
 				byte[] tmp = new byte[a];
-				in.read(tmp, raw_data.size(), a);
+				in.read(tmp, 0, a);
 
 				for (byte b : tmp) {
-					raw_data.add(b);
+					rawData.add(b);
 				}
 			}
 
-			byte[] result = new byte[raw_data.size()];
-			for (int i = 0; i < raw_data.size(); i++) {
-				result[i] = raw_data.get(i);
+			byte[] result = new byte[rawData.size()];
+			for (int i = 0; i < rawData.size(); i++) {
+				result[i] = rawData.get(i);
 			}
 			return result;
 
