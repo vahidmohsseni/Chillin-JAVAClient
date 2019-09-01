@@ -44,7 +44,7 @@ public class Network {
 		try {
 			InputStream in = socket.getInputStream();
 			byte[] sizeByte = new byte[4];
-			in.read(sizeByte, 0, 4);
+			in.read(sizeByte, 0, sizeByte.length);
 			int size = ByteBuffer.wrap(sizeByte).order(ByteOrder.LITTLE_ENDIAN).getChar();
 
 			List<Byte> rawData = new ArrayList<>();
