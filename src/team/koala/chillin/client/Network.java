@@ -83,7 +83,6 @@ public class Network {
 			os.flush();
 
 		} catch (IOException e) {
-			e.printStackTrace();
 			return -1;
 		}
 
