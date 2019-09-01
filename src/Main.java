@@ -8,23 +8,21 @@ import java.io.IOException;
 
 public class Main {
 
-    private static String configPath = System.getProperty("user.dir") + "/";
-    private static String configFile = "gamecfg.json";
+	private static String configPath = System.getProperty("user.dir") + "/";
+	private static String configFile = "gamecfg.json";
 
 
-    public static void main(String[] args) throws IOException {
-        if (args.length > 0) {
-            configPath += args[0];
-        }
-        else {
-            configPath += configFile;
-        }
+	public static void main(String[] args) throws IOException {
+		if (args.length > 0)
+			configPath += args[0];
+		else
+			configPath += configFile;
 
-        KSObject world = new World();
-        AI ai = new AI((World) world);
+		KSObject world = new World();
+		AI ai = new AI((World) world);
 
-        GameClient app = new GameClient(configPath, args);
-        app.registerAI(ai);
-        app.run();
-    }
+		GameClient app = new GameClient(configPath, args);
+		app.registerAI(ai);
+		app.run();
+	}
 }
