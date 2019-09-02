@@ -1,7 +1,6 @@
 package team.koala.chillin.client;
 
 import team.koala.chillin.client.helper.messages.BaseSnapshot;
-import ks.KSObject;
 
 import java.util.*;
 

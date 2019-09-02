@@ -4,16 +4,15 @@ import team.koala.chillin.client.helper.messages.BaseCommand;
 import team.koala.chillin.client.helper.messages.BaseSnapshot;
 import team.koala.chillin.client.helper.messages.RealtimeCommand;
 import team.koala.chillin.client.helper.messages.RealtimeSnapshot;
-import ks.KSObject;
 
 
-public class RealtimeAI<T extends KSObject> extends BaseAI<T> {
+public class RealtimeAI<TWorld, TCommand> extends BaseAI<TWorld, TCommand> {
 
 	protected Integer currentCycle;
 	protected Float cycleDuration;
 
 
-	public RealtimeAI(T world) {
+	public RealtimeAI(TWorld world) {
 		super(world);
 	}
 
@@ -31,7 +30,7 @@ public class RealtimeAI<T extends KSObject> extends BaseAI<T> {
 	}
 
 	@Override
-	protected void _sendCommand(KSObject command, BaseCommand msg) {
+	protected void _sendCommand(TCommand command, BaseCommand msg) {
 		RealtimeCommand message;
 		if (msg == null)
 			message = new RealtimeCommand();

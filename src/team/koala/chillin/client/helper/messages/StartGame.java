@@ -1,11 +1,10 @@
 package team.koala.chillin.client.helper.messages;
 
+import team.koala.chillin.client.KSObject;
+
 import java.lang.*;
 import java.util.*;
 import java.nio.*;
-import java.nio.charset.Charset;
-
-import ks.KSObject;
 
 public class StartGame extends KSObject
 {

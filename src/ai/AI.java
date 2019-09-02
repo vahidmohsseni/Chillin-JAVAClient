@@ -1,11 +1,12 @@
 package ai;
 
 import team.koala.chillin.client.TurnbasedAI;
+import ks.KSObject;
 import ks.models.*;
 import ks.commands.*;
 
 
-public class AI extends TurnbasedAI<World> {
+public class AI extends TurnbasedAI<World, KSObject> {
 	
 	public AI(World world) {
 		super(world);

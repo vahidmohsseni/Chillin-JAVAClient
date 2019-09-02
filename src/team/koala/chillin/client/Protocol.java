@@ -1,6 +1,5 @@
 package team.koala.chillin.client;
 
-import ks.KSObject;
 import team.koala.chillin.client.helper.parser.Parser;
 
 

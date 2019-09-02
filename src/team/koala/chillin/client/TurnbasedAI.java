@@ -4,18 +4,17 @@ import team.koala.chillin.client.helper.messages.BaseCommand;
 import team.koala.chillin.client.helper.messages.BaseSnapshot;
 import team.koala.chillin.client.helper.messages.TurnbasedCommand;
 import team.koala.chillin.client.helper.messages.TurnbasedSnapshot;
-import ks.KSObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class TurnbasedAI<T extends KSObject> extends RealtimeAI<T> {
+public class TurnbasedAI<TWorld, TCommand> extends RealtimeAI<TWorld, TCommand> {
 
 	protected List<String> turnAllowedSides;
 
 
-	public TurnbasedAI(T world) {
+	public TurnbasedAI(TWorld world) {
 		super(world);
 		turnAllowedSides = new ArrayList<>();
 	}
@@ -34,7 +33,7 @@ public class TurnbasedAI<T extends KSObject> extends RealtimeAI<T> {
 	}
 
 	@Override
-	public void _sendCommand(KSObject command, BaseCommand msg) {
+	public void _sendCommand(TCommand command, BaseCommand msg) {
 		TurnbasedCommand message;
 		if (msg == null)
 			message = new TurnbasedCommand();

@@ -2,7 +2,6 @@ package team.koala.chillin.client;
 
 import team.koala.chillin.client.helper.logger.Logger;
 import team.koala.chillin.client.helper.messages.*;
-import ks.KSObject;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;

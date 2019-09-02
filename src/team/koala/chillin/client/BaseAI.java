@@ -4,21 +4,27 @@ import team.koala.chillin.client.helper.messages.BaseCommand;
 import team.koala.chillin.client.helper.messages.BaseSnapshot;
 import team.koala.chillin.client.helper.parser.Parser;
 
-import ks.KSObject;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
-public class BaseAI<T extends KSObject> extends AbstractAI {
+public class BaseAI<TWorld, TCommand> extends AbstractAI {
 
-	protected T world;
+	protected TWorld world;
 
 
-	BaseAI(T world) {
+	BaseAI(TWorld world) {
 		this.world = world;
 	}
 
 	@Override
 	public void update(BaseSnapshot snapshot) {
-		this.world.deserialize(Parser.getBytes(snapshot.getWorldPayload()));
+		// Deserialize world
+		try {
+			Method method = this.world.getClass().getMethod("deserialize", byte[].class);
+			method.invoke(this.world, Parser.getBytes(snapshot.getWorldPayload()));
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+				 IllegalArgumentException | InvocationTargetException e) {}
 	}
 
 	@Override
@@ -27,23 +33,37 @@ public class BaseAI<T extends KSObject> extends AbstractAI {
 	}
 
 
-	protected void _sendCommand(KSObject command, BaseCommand msg) {
+	protected void _sendCommand(TCommand command, BaseCommand msg) {
 		BaseCommand message;
 		if (msg == null)
 			message = new BaseCommand();
 		else
 			message = (BaseCommand) msg;
 
-		message.setType(command.name());
-		message.setPayload(Parser.getString(command.serialize()));
+		// Store command's name
+		try {
+			Method method = command.getClass().getMethod("name");
+			String name = (String) method.invoke(command);
+			message.setType(name);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+				 IllegalArgumentException | InvocationTargetException e) {}
+
+		// Store command's serialization data
+		try {
+			Method method = command.getClass().getMethod("serialize");
+			byte[] data = (byte[]) method.invoke(command);
+			message.setPayload(Parser.getString(data));
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+				 IllegalArgumentException | InvocationTargetException e) {}
+
 		commandSendQueue.add(message);
 	}
 
-	protected void _sendCommand(KSObject command) {
+	protected void _sendCommand(TCommand command) {
 		_sendCommand(command, null);
 	}
 
-	public void sendCommand(KSObject command) {
+	public void sendCommand(TCommand command) {
 		if (allowedToDecide())
 			_sendCommand(command);
 	}

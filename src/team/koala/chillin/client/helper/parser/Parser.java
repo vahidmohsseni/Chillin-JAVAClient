@@ -1,6 +1,6 @@
 package team.koala.chillin.client.helper.parser;
 
-import ks.KSObject;
+import team.koala.chillin.client.KSObject;
 import team.koala.chillin.client.helper.messages.Message;
 
 import java.nio.charset.StandardCharsets;

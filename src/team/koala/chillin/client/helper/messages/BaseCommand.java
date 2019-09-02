@@ -5,7 +5,7 @@ import java.util.*;
 import java.nio.*;
 import java.nio.charset.Charset;
 
-import ks.KSObject;
+import team.koala.chillin.client.KSObject;
 
 public class BaseCommand extends KSObject
 {
